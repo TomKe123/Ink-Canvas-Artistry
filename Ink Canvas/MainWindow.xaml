@@ -2402,24 +2402,7 @@
                                             FontFamily="{StaticResource FluentIconFontFamily}"
                                             FontSize="22"
                                             Foreground="{DynamicResource BoardBarForeground}"
-                                            Glyph="&#xe716;" />
-                                        <Border
-                                            Width="11"
-                                            Height="11"
-                                            Margin="0,-1,-1,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Top"
-                                            BorderBrush="{DynamicResource BoardBarForeground}"
-                                            BorderThickness="1"
-                                            CornerRadius="50">
-                                            <TextBlock
-                                                Margin="0,-1,0,0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Top"
-                                                FontSize="8"
-                                                Foreground="{DynamicResource BoardBarForeground}"
-                                                Text="1" />
-                                        </Border>
+                                            Glyph="&#xe77b;" />
                                     </Grid>
                                     <TextBlock
                                         HorizontalAlignment="Center"
@@ -2540,23 +2523,6 @@
                                                                     FontFamily="{StaticResource FluentIconFontFamily}"
                                                                     Foreground="{DynamicResource BoardBarForeground}"
                                                                     Glyph="&#xe716;" />
-                                                                <Border
-                                                                    Width="9"
-                                                                    Height="9"
-                                                                    Margin="0,-1,-2,0"
-                                                                    HorizontalAlignment="Right"
-                                                                    VerticalAlignment="Top"
-                                                                    BorderBrush="{DynamicResource BoardBarForeground}"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="50">
-                                                                    <TextBlock
-                                                                        Margin="0,-0.8,0,0"
-                                                                        HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Top"
-                                                                        FontSize="7"
-                                                                        Foreground="{DynamicResource BoardBarForeground}"
-                                                                        Text="多" />
-                                                                </Border>
                                                             </Grid>
                                                             <Label
                                                                 HorizontalAlignment="Center"
@@ -2584,24 +2550,7 @@
                                                                     Height="22"
                                                                     FontFamily="{StaticResource FluentIconFontFamily}"
                                                                     Foreground="{DynamicResource BoardBarForeground}"
-                                                                    Glyph="&#xe716;" />
-                                                                <Border
-                                                                    Width="9"
-                                                                    Height="9"
-                                                                    Margin="0,-1,-2,0"
-                                                                    HorizontalAlignment="Right"
-                                                                    VerticalAlignment="Top"
-                                                                    BorderBrush="{DynamicResource BoardBarForeground}"
-                                                                    BorderThickness="1"
-                                                                    CornerRadius="50">
-                                                                    <TextBlock
-                                                                        Margin="0,-0.8,0,0"
-                                                                        HorizontalAlignment="Center"
-                                                                        VerticalAlignment="Top"
-                                                                        FontSize="7"
-                                                                        Foreground="{DynamicResource BoardBarForeground}"
-                                                                        Text="1" />
-                                                                </Border>
+                                                                    Glyph="&#xe77b;" />
                                                             </Grid>
                                                             <Label
                                                                 HorizontalAlignment="Center"
@@ -6706,24 +6655,7 @@
                                             FontFamily="{StaticResource FluentIconFontFamily}"
                                             FontSize="16"
                                             Foreground="{DynamicResource FloatBarForeground}"
-                                            Glyph="&#xe716;" />
-                                        <Border
-                                            Width="9"
-                                            Height="9"
-                                            Margin="0,1,3,0"
-                                            HorizontalAlignment="Right"
-                                            VerticalAlignment="Top"
-                                            BorderBrush="{DynamicResource FloatBarForeground}"
-                                            BorderThickness="1"
-                                            CornerRadius="50">
-                                            <TextBlock
-                                                Margin="0,-0.8,0,0"
-                                                HorizontalAlignment="Center"
-                                                VerticalAlignment="Top"
-                                                FontSize="7"
-                                                Foreground="{DynamicResource FloatBarForeground}"
-                                                Text="1" />
-                                        </Border>
+                                            Glyph="&#xe77b;" />
                                     </Grid>
                                     <TextBlock
                                         Margin="0,-1,0,0"
@@ -6858,23 +6790,6 @@
                                                                 FontFamily="{StaticResource FluentIconFontFamily}"
                                                                 Foreground="{DynamicResource FloatBarForeground}"
                                                                 Glyph="&#xe716;" />
-                                                            <Border
-                                                                Width="9"
-                                                                Height="9"
-                                                                Margin="0,-1,-2,0"
-                                                                HorizontalAlignment="Right"
-                                                                VerticalAlignment="Top"
-                                                                BorderBrush="{DynamicResource FloatBarForeground}"
-                                                                BorderThickness="1"
-                                                                CornerRadius="50">
-                                                                <TextBlock
-                                                                    Margin="0,-0.8,0,0"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Top"
-                                                                    FontSize="7"
-                                                                    Foreground="{DynamicResource FloatBarForeground}"
-                                                                    Text="多" />
-                                                            </Border>
                                                         </Grid>
                                                         <Label
                                                             HorizontalAlignment="Center"
@@ -6902,24 +6817,7 @@
                                                                 Height="22"
                                                                 FontFamily="{StaticResource FluentIconFontFamily}"
                                                                 Foreground="{DynamicResource FloatBarForeground}"
-                                                                Glyph="&#xe716;" />
-                                                            <Border
-                                                                Width="9"
-                                                                Height="9"
-                                                                Margin="0,-1,-2,0"
-                                                                HorizontalAlignment="Right"
-                                                                VerticalAlignment="Top"
-                                                                BorderBrush="{DynamicResource FloatBarForeground}"
-                                                                BorderThickness="1"
-                                                                CornerRadius="50">
-                                                                <TextBlock
-                                                                    Margin="0,-0.8,0,0"
-                                                                    HorizontalAlignment="Center"
-                                                                    VerticalAlignment="Top"
-                                                                    FontSize="7"
-                                                                    Foreground="{DynamicResource FloatBarForeground}"
-                                                                    Text="1" />
-                                                            </Border>
+                                                                Glyph="&#xe77b;" />
                                                         </Grid>
                                                         <Label
                                                             HorizontalAlignment="Center"
