@@ -419,7 +419,7 @@ namespace Ink_Canvas
         {
             AnimationsHelper.HideWithSlideAndFade(BorderTools);
             AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
-            new RandWindow().Show();
+            LaunchClassIslandCaller("classisland://plugins/IslandCaller/Advanced/GUI");
         }
 
         private void SymbolIconRandOne_Click(object sender, RoutedEventArgs e)
@@ -427,7 +427,19 @@ namespace Ink_Canvas
             AnimationsHelper.HideWithSlideAndFade(BorderTools);
             AnimationsHelper.HideWithSlideAndFade(BoardBorderTools);
 
-            new RandWindow(true).ShowDialog();
+            LaunchClassIslandCaller("classisland://plugins/IslandCaller/Simple/1");
+        }
+
+        private void LaunchClassIslandCaller(string uri)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo(uri) { UseShellExecute = true });
+            }
+            catch
+            {
+                MessageBox.Show("未能调用 ClassIsland 插件，请确认 ClassIsland 已安装并启用 IslandCaller。", "启动失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+            }
         }
 
         private void GridInkReplayButton_Click(object sender, RoutedEventArgs e)
