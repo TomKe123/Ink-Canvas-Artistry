@@ -438,7 +438,7 @@ namespace Ink_Canvas
             }
             catch
             {
-                MessageBox.Show("未能调用 ClassIsland 插件，请确认 ClassIsland 已安装并启用 IslandCaller。", "启动失败", MessageBoxButton.OK, MessageBoxImage.Warning);
+                System.Windows.MessageBox.Show("未能调用 ClassIsland 插件，请确认 ClassIsland 已安装并启用 IslandCaller。", "启动失败", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
