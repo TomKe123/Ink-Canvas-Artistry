@@ -5435,7 +5435,7 @@
                             Height="22"
                             FontFamily="{StaticResource FluentIconFontFamily}"
                             Foreground="{DynamicResource FloatBarForeground}"
-                            Glyph="&#xe76e;" />
+                            Glyph="&#xe70f;" />
                         <ui:FontIcon
                             Name="SymbolIconEmoji2"
                             Width="0"
