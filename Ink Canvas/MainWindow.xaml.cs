@@ -166,6 +166,7 @@ namespace Ink_Canvas
         public static Settings Settings = new Settings();
         public static string settingsFileName = "Settings.json";
         bool isLoaded = false;
+        bool isAltF4CloseAttempt = false;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -188,6 +189,14 @@ namespace Ink_Canvas
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
+            if (isAltF4CloseAttempt)
+            {
+                e.Cancel = true;
+                isAltF4CloseAttempt = false;
+                LogHelper.WriteLogToFile("Ink Canvas closing cancelled by Alt+F4 interception", LogHelper.LogType.Event);
+                return;
+            }
+
             LogHelper.WriteLogToFile("Ink Canvas closing", LogHelper.LogType.Event);
             if (!CloseIsFromButton && Settings.Advanced.IsSecondConfimeWhenShutdownApp)
             {

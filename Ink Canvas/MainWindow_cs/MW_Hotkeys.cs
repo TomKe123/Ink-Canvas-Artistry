@@ -73,6 +73,15 @@ namespace Ink_Canvas
 
         private void Main_Grid_PreviewKeyDown(object sender, KeyEventArgs e)
         {
+            bool isAltF4 = (Keyboard.Modifiers & ModifierKeys.Alt) == ModifierKeys.Alt
+                && (e.Key == Key.F4 || (e.Key == Key.System && e.SystemKey == Key.F4));
+            if (isAltF4)
+            {
+                isAltF4CloseAttempt = true;
+                e.Handled = true;
+                return;
+            }
+
             if (BtnPPTSlideShowEnd.Visibility != Visibility.Visible || currentMode != 0) return;
 
             if (e.Key == Key.Down || e.Key == Key.PageDown || e.Key == Key.Right || e.Key == Key.N || e.Key == Key.Space)
