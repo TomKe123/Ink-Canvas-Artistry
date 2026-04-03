@@ -84,22 +84,72 @@ namespace Ink_Canvas
         Point pointDesktop = new Point(-1, -1); //用于记录上次在桌面时的坐标
         Point pointPPT = new Point(-1, -1); //用于记录上次在PPT中的坐标
 
+        private Thickness BuildClampedFloatingBarMargin(double left, double top)
+        {
+            double viewportWidth = ActualWidth;
+            double viewportHeight = ActualHeight;
+            if (double.IsNaN(viewportWidth) || double.IsInfinity(viewportWidth) || viewportWidth <= 0)
+            {
+                viewportWidth = SystemParameters.WorkArea.Width;
+            }
+            if (double.IsNaN(viewportHeight) || double.IsInfinity(viewportHeight) || viewportHeight <= 0)
+            {
+                viewportHeight = SystemParameters.WorkArea.Height;
+            }
+
+            double barWidth = ViewboxFloatingBar.ActualWidth;
+            double barHeight = ViewboxFloatingBar.ActualHeight;
+            if (double.IsNaN(barWidth) || double.IsInfinity(barWidth) || barWidth <= 0)
+            {
+                barWidth = ViewboxFloatingBar.Width;
+            }
+            if (double.IsNaN(barHeight) || double.IsInfinity(barHeight) || barHeight <= 0)
+            {
+                barHeight = ViewboxFloatingBar.Height;
+            }
+
+            if (ViewboxFloatingBarScaleTransform != null)
+            {
+                barWidth *= ViewboxFloatingBarScaleTransform.ScaleX;
+                barHeight *= ViewboxFloatingBarScaleTransform.ScaleY;
+            }
+
+            double maxLeft = Math.Max(0, viewportWidth - barWidth);
+            double maxTop = Math.Max(0, viewportHeight - barHeight);
+            double clampedLeft = Math.Max(0, Math.Min(maxLeft, left));
+            double clampedTop = Math.Max(0, Math.Min(maxTop, top));
+
+            return new Thickness(clampedLeft, clampedTop, -2000, -200);
+        }
+
+        private Point ClampFloatingBarPoint(Point targetPoint)
+        {
+            Thickness clampedMargin = BuildClampedFloatingBarMargin(targetPoint.X, targetPoint.Y);
+            return new Point(clampedMargin.Left, clampedMargin.Top);
+        }
+
+        private void SetFloatingBarMarginClamped(double left, double top)
+        {
+            ViewboxFloatingBar.Margin = BuildClampedFloatingBarMargin(left, top);
+        }
+
         void SymbolIconEmoji_MouseMove(object sender, MouseEventArgs e)
         {
             if (isDragDropInEffect)
             {
                 double xPos = e.GetPosition(null).X - pos.X + ViewboxFloatingBar.Margin.Left;
                 double yPos = e.GetPosition(null).Y - pos.Y + ViewboxFloatingBar.Margin.Top;
-                ViewboxFloatingBar.Margin = new Thickness(xPos, yPos, -2000, -200);
+                Point clampedPoint = ClampFloatingBarPoint(new Point(xPos, yPos));
+                SetFloatingBarMarginClamped(clampedPoint.X, clampedPoint.Y);
 
                 pos = e.GetPosition(null);
                 if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
                 {
-                    pointPPT = new Point(xPos, yPos);
+                    pointPPT = clampedPoint;
                 }
                 else
                 {
-                    pointDesktop = new Point(xPos, yPos);
+                    pointDesktop = clampedPoint;
                 }
             }
         }
@@ -619,11 +669,24 @@ namespace Ink_Canvas
                     }
                 }
 
+                pos = ClampFloatingBarPoint(pos);
+                if (MarginFromEdge != -60)
+                {
+                    if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
+                    {
+                        pointPPT = pos;
+                    }
+                    else
+                    {
+                        pointDesktop = pos;
+                    }
+                }
+
                 ThicknessAnimation marginAnimation = new ThicknessAnimation
                 {
                     Duration = TimeSpan.FromSeconds(0.5),
                     From = ViewboxFloatingBar.Margin,
-                    To = new Thickness(pos.X, pos.Y, -2000, -200),
+                    To = BuildClampedFloatingBarMargin(pos.X, pos.Y),
                     EasingFunction = new CircleEase()
                 };
                 ViewboxFloatingBar.BeginAnimation(FrameworkElement.MarginProperty, marginAnimation);
@@ -633,7 +696,7 @@ namespace Ink_Canvas
 
             await Dispatcher.InvokeAsync(() =>
             {
-                ViewboxFloatingBar.Margin = new Thickness(pos.X, pos.Y, -2000, -200);
+                SetFloatingBarMarginClamped(pos.X, pos.Y);
                 if (Topmost == false) ViewboxFloatingBar.Visibility = Visibility.Hidden;
             });
         }
