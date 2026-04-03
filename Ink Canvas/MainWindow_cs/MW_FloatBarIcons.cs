@@ -84,53 +84,42 @@ namespace Ink_Canvas
         Point pointDesktop = new Point(-1, -1); //用于记录上次在桌面时的坐标
         Point pointPPT = new Point(-1, -1); //用于记录上次在PPT中的坐标
 
-        private Thickness BuildClampedFloatingBarMargin(double left, double top)
+        private Point ClampFloatingBarPositionToScreen(Point targetPosition)
         {
-            double viewportWidth = ActualWidth;
-            double viewportHeight = ActualHeight;
-            if (double.IsNaN(viewportWidth) || double.IsInfinity(viewportWidth) || viewportWidth <= 0)
+            double dpiScaleX = 1;
+            double dpiScaleY = 1;
+            PresentationSource source = PresentationSource.FromVisual(this);
+            if (source?.CompositionTarget != null)
             {
-                viewportWidth = SystemParameters.WorkArea.Width;
-            }
-            if (double.IsNaN(viewportHeight) || double.IsInfinity(viewportHeight) || viewportHeight <= 0)
-            {
-                viewportHeight = SystemParameters.WorkArea.Height;
+                dpiScaleX = source.CompositionTarget.TransformToDevice.M11;
+                dpiScaleY = source.CompositionTarget.TransformToDevice.M22;
             }
 
-            double barWidth = ViewboxFloatingBar.ActualWidth;
-            double barHeight = ViewboxFloatingBar.ActualHeight;
-            if (double.IsNaN(barWidth) || double.IsInfinity(barWidth) || barWidth <= 0)
-            {
-                barWidth = ViewboxFloatingBar.Width;
-            }
-            if (double.IsNaN(barHeight) || double.IsInfinity(barHeight) || barHeight <= 0)
-            {
-                barHeight = ViewboxFloatingBar.Height;
-            }
+            IntPtr windowHandle = new WindowInteropHelper(this).Handle;
+            System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromHandle(windowHandle);
+            double screenWidth = screen.Bounds.Width / dpiScaleX;
+            double screenHeight = screen.Bounds.Height / dpiScaleY;
 
-            if (ViewboxFloatingBarScaleTransform != null)
-            {
-                barWidth *= ViewboxFloatingBarScaleTransform.ScaleX;
-                barHeight *= ViewboxFloatingBarScaleTransform.ScaleY;
-            }
+            double floatingBarWidth = ViewboxFloatingBar.ActualWidth;
+            double floatingBarHeight = ViewboxFloatingBar.ActualHeight;
 
-            double maxLeft = Math.Max(0, viewportWidth - barWidth);
-            double maxTop = Math.Max(0, viewportHeight - barHeight);
-            double clampedLeft = Math.Max(0, Math.Min(maxLeft, left));
-            double clampedTop = Math.Max(0, Math.Min(maxTop, top));
+            if (floatingBarWidth <= 0) floatingBarWidth = ViewboxFloatingBar.Width;
+            if (floatingBarHeight <= 0) floatingBarHeight = ViewboxFloatingBar.Height;
+            if (floatingBarWidth <= 0) floatingBarWidth = 284;
+            if (floatingBarHeight <= 0) floatingBarHeight = 50;
 
-            return new Thickness(clampedLeft, clampedTop, -2000, -200);
-        }
+            double scaleX = ViewboxFloatingBarScaleTransform.ScaleX <= 0 ? 1 : ViewboxFloatingBarScaleTransform.ScaleX;
+            double scaleY = ViewboxFloatingBarScaleTransform.ScaleY <= 0 ? 1 : ViewboxFloatingBarScaleTransform.ScaleY;
+            floatingBarWidth *= scaleX;
+            floatingBarHeight *= scaleY;
 
-        private Point ClampFloatingBarPoint(Point targetPoint)
-        {
-            Thickness clampedMargin = BuildClampedFloatingBarMargin(targetPoint.X, targetPoint.Y);
-            return new Point(clampedMargin.Left, clampedMargin.Top);
-        }
+            double maxX = Math.Max(0, screenWidth - floatingBarWidth);
+            double maxY = Math.Max(0, screenHeight - floatingBarHeight);
 
-        private void SetFloatingBarMarginClamped(double left, double top)
-        {
-            ViewboxFloatingBar.Margin = BuildClampedFloatingBarMargin(left, top);
+            return new Point(
+                Math.Max(0, Math.Min(targetPosition.X, maxX)),
+                Math.Max(0, Math.Min(targetPosition.Y, maxY))
+            );
         }
 
         void SymbolIconEmoji_MouseMove(object sender, MouseEventArgs e)
@@ -139,17 +128,17 @@ namespace Ink_Canvas
             {
                 double xPos = e.GetPosition(null).X - pos.X + ViewboxFloatingBar.Margin.Left;
                 double yPos = e.GetPosition(null).Y - pos.Y + ViewboxFloatingBar.Margin.Top;
-                Point clampedPoint = ClampFloatingBarPoint(new Point(xPos, yPos));
-                SetFloatingBarMarginClamped(clampedPoint.X, clampedPoint.Y);
+                Point clampedPosition = ClampFloatingBarPositionToScreen(new Point(xPos, yPos));
+                ViewboxFloatingBar.Margin = new Thickness(clampedPosition.X, clampedPosition.Y, -2000, -200);
 
                 pos = e.GetPosition(null);
                 if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
                 {
-                    pointPPT = clampedPoint;
+                    pointPPT = clampedPosition;
                 }
                 else
                 {
-                    pointDesktop = clampedPoint;
+                    pointDesktop = clampedPosition;
                 }
             }
         }
@@ -669,24 +658,16 @@ namespace Ink_Canvas
                     }
                 }
 
-                pos = ClampFloatingBarPoint(pos);
-                if (MarginFromEdge != -60)
+                if (MarginFromEdge >= 0 && Topmost)
                 {
-                    if (BtnPPTSlideShowEnd.Visibility == Visibility.Visible)
-                    {
-                        pointPPT = pos;
-                    }
-                    else
-                    {
-                        pointDesktop = pos;
-                    }
+                    pos = ClampFloatingBarPositionToScreen(pos);
                 }
 
                 ThicknessAnimation marginAnimation = new ThicknessAnimation
                 {
                     Duration = TimeSpan.FromSeconds(0.5),
                     From = ViewboxFloatingBar.Margin,
-                    To = BuildClampedFloatingBarMargin(pos.X, pos.Y),
+                    To = new Thickness(pos.X, pos.Y, -2000, -200),
                     EasingFunction = new CircleEase()
                 };
                 ViewboxFloatingBar.BeginAnimation(FrameworkElement.MarginProperty, marginAnimation);
@@ -696,7 +677,11 @@ namespace Ink_Canvas
 
             await Dispatcher.InvokeAsync(() =>
             {
-                SetFloatingBarMarginClamped(pos.X, pos.Y);
+                if (MarginFromEdge >= 0 && Topmost)
+                {
+                    pos = ClampFloatingBarPositionToScreen(pos);
+                }
+                ViewboxFloatingBar.Margin = new Thickness(pos.X, pos.Y, -2000, -200);
                 if (Topmost == false) ViewboxFloatingBar.Visibility = Visibility.Hidden;
             });
         }

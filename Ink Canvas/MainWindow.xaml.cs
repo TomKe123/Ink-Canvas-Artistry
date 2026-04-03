@@ -47,7 +47,7 @@ namespace Ink_Canvas
 
             GridInkCanvasSelectionCover.Visibility = Visibility.Collapsed;
 
-            SetFloatingBarMarginClamped((SystemParameters.WorkArea.Width - 284) / 2, SystemParameters.WorkArea.Height - 60);
+            ViewboxFloatingBar.Margin = new Thickness((SystemParameters.WorkArea.Width - 284) / 2, SystemParameters.WorkArea.Height - 60, -2000, -200);
             ViewboxFloatingBarMarginAnimation();
 
             try
